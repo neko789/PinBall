@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class BallController : MonoBehaviour
 {
-    private int score = 0;
     private int totalscore = 0;
 
     //ボールが見える可能性のあるz軸の最大値
@@ -12,26 +11,22 @@ public class BallController : MonoBehaviour
 
     //ゲームオーバを表示するテキスト
     private GameObject gameoverText;
-    private GameObject TotalScoreText;
+    private Text TotalScoreText;
 
     // Use this for initialization
     void Start()
     {
         //シーン中のGameOverTextオブジェクトを取得
         this.gameoverText = GameObject.Find("GameOverText");
-        this.TotalScoreText = GameObject.Find("TotalScoreText");
+        this.TotalScoreText = GameObject.Find("TotalScoreText").GetComponent<Text>();
+        this.TotalScoreText.text = "TotalScore :" + totalscore;
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.TotalScoreText.GetComponent<Text>().text = "TotalScore :" + totalscore;
         //ボールが画面外に出た場合
-        if (this.score >= 0)
-        {
-            this.totalscore += this.score;
-            this.score -= this.score;
-        }
+
         if (this.transform.position.z < this.visiblePosZ)
         {
             //GameoverTextにゲームオーバを表示
@@ -42,16 +37,21 @@ public class BallController : MonoBehaviour
     {
         if (other.gameObject.tag == "SmallStarTag")
         {
-            this.score = 10;
+            Addscore(10);
         }
         else if (other.gameObject.tag == "LargeStarTag")
         {
-            this.score = 50 ;
+            Addscore(50);
         }
         else if (other.gameObject.tag == "SmallCloudTag" || tag == "LargeCloudTag")
         {
-            this.score = 20;
+            Addscore(20);
         }
 
+    }
+    void Addscore(int score)
+    {
+        this.totalscore += score;
+        this.TotalScoreText.text = "TotalScore :" + totalscore;
     }
 }
